@@ -2,7 +2,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
@@ -95,7 +94,7 @@ def delete(id):
     return redirect(url_for('blog.index'))
 
 @bp.route('/my-posts')
-@login_required
+@login_required(role='student')
 def my_posts():
     db = get_db()
     posts = db.execute(
@@ -103,4 +102,8 @@ def my_posts():
         (g.user['id'],)
     ).fetchall()
     return render_template('blog/my_posts.html', posts=posts)
+
+@bp.route('/admin-panel')
+@login_required(role='admin')
+def admin_panel():
 
