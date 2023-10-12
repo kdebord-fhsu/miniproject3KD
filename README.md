@@ -2,7 +2,7 @@
 
 INF601 - Advanced Programming in Python <br>
 Kelton DeBord <br>
-Mini Project 2
+Mini Project 3
 
 ## Description 
 
