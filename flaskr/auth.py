@@ -58,8 +58,16 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            session['username'] = user['username']
+            session['full_name'] = user['full_name']
+            session['student_id'] = user['student_id']
+            return redirect(url_for('index'))  # Redirect to the home page or student dashboard
 
         flash(error)
 
     return render_template('auth/login.html')
+@bp.route('/profile')
+@login_required
+def profile():
+    return render_template('auth/profile.html')
+

@@ -93,3 +93,14 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+
+@bp.route('/my-posts')
+@login_required
+def my_posts():
+    db = get_db()
+    posts = db.execute(
+        'SELECT id, title, body, created FROM post WHERE author_id = ? ORDER BY created DESC',
+        (g.user['id'],)
+    ).fetchall()
+    return render_template('blog/my_posts.html', posts=posts)
+
