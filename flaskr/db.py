@@ -35,3 +35,33 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+def insert_student(username, password, role='student', full_name=None, student_id=None):
+    db = get_db()
+    db.execute(
+        "INSERT INTO user (username, password, role, full_name, student_id) VALUES (?, ?, ?, ?, ?)",
+        (username, generate_password_hash(password), role, full_name, student_id)
+    )
+    db.commit()
+
+def get_student_by_username(username):
+    db = get_db()
+    return db.execute('SELECT * FROM user WHERE username = ?', (username,)).fetchone()
+
+def get_student_by_id(student_id):
+    db = get_db()
+    return db.execute('SELECT * FROM user WHERE student_id = ?', (student_id,)).fetchone()
+
+def update_student(student_id, full_name=None, password=None):
+    db = get_db()
+    if full_name:
+        db.execute('UPDATE user SET full_name = ? WHERE id = ?', (full_name, student_id))
+    if password:
+        db.execute('UPDATE user SET password = ? WHERE id = ?', (generate_password_hash(password), student_id))
+    db.commit()
+
+def delete_student(student_id):
+    db = get_db()
+    db.execute('DELETE FROM user WHERE id = ?', (student_id,))
+    db.commit()
