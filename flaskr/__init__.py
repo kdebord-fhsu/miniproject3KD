@@ -1,13 +1,11 @@
-# INF601 - Advanced Programming in Python
-# Kelton DeBord
-# Mini Project 3
+#INF - 601
+#Kelton DeBord
+#Mini Project 3
 import os
-
 from flask import Flask
-
+from flaskr.blog import bp as blog_bp
 
 def create_app(test_config=None):
-    # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -15,22 +13,19 @@ def create_app(test_config=None):
     )
 
     if test_config is None:
-        # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
     else:
-        # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    # Define the index route
+    @app.route('/')
+    def index():
+        return 'Hello, World!'  # You can render a template or any other response here
 
     from . import db
     db.init_app(app)

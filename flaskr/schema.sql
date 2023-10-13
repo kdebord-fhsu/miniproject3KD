@@ -25,6 +25,5 @@ CREATE TABLE student (
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   full_name TEXT NOT NULL,
-  student_id TEXT NOT NULL,
-  student_email TEXT NOT NULL
+  student_id TEXT NOT NULL
 );

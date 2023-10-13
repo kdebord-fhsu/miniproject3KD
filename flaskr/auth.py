@@ -1,12 +1,21 @@
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
-)
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
-from functools import wraps
-from flask import g, redirect, url_for
 from flaskr.db import get_db
+from functools import wraps
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+def login_required(role=None):
+    def decorator(view):
+        @wraps(view)
+        def wrapped_view(*args, **kwargs):
+            if g.user is None:
+                return redirect(url_for('auth.login'))
+            if role and g.user['role'] != role:
+                abort(403)  # Forbidden
+            return view(*args, **kwargs)
+        return wrapped_view
+    return decorator
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -47,40 +56,31 @@ def login():
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM student WHERE username = ?', (username,)
+            'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 
-        if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+        if user is None or not check_password_hash(user['password'], password):
+            error = 'Incorrect username or password.'
 
         if error is None:
             session.clear()
             session['user_id'] = user['id']
             session['username'] = user['username']
-            session['full_name'] = user['full_name']
-            session['student_id'] = user['student_id']
+            session['role'] = user['role']  # Add role to the session
             return redirect(url_for('index'))  # Redirect to the home page or student dashboard
 
         flash(error)
 
     return render_template('auth/login.html')
+
 @bp.route('/profile')
 @login_required
-def login_required(role=None):
-    def decorator(view):
-        @wraps(view)
-        def wrapped_view(*args, **kwargs):
-            if g.user is None:
-                return redirect(url_for('auth.login'))
+def profile():
+    # Your profile logic here
+    return render_template('auth/profile.html')  # Assuming you have a profile.html template
 
-            if role and g.user['role'] != role:
-                # Redirect to an unauthorized page or show an error message
-                return "Unauthorized Access", 403  # HTTP status code for forbidden access
-
-            return view(*args, **kwargs)
-        return wrapped_view
-    return decorator
-
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
