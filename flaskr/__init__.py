@@ -2,7 +2,7 @@
 #Kelton DeBord
 #Mini Project 3
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flaskr.blog import bp as blog_bp
 
 def create_app(test_config=None):
@@ -25,7 +25,7 @@ def create_app(test_config=None):
     # Define the index route
     @app.route('/')
     def index():
-        return 'Hello, World!'  # You can render a template or any other response here
+        return render_template('/auth/login.html')  # You can render a template or any other response here
 
     from . import db
     db.init_app(app)
@@ -34,7 +34,6 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
 
     from . import blog
-    app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app

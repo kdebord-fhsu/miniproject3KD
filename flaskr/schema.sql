@@ -1,12 +1,15 @@
+-- Drop existing tables if they exist
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS role;
 
 -- Create the user table for authentication
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
+  password TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'student'
 );
 
 -- Create the post table for blog posts
