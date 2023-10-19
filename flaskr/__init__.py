@@ -1,9 +1,11 @@
-#INF - 601
-#Kelton DeBord
-#Mini Project 3
+# INF - 601
+# Kelton DeBord
+# Mini Project 3
 import os
 from flask import Flask, render_template
-from flaskr.blog import bp as blog_bp
+from . import db
+from .auth import bp as auth_bp
+from .blog import bp as blog_bp
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -22,18 +24,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # Initialize the database
+    db.init_app(app)
+
     # Define the index route
     @app.route('/')
     def index():
         return render_template('/auth/login.html')  # You can render a template or any other response here
 
-    from . import db
-    db.init_app(app)
-
-    from . import auth
-    app.register_blueprint(auth.bp)
-
-    from . import blog
-    app.add_url_rule('/', endpoint='index')
+    # Register blueprints
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(blog_bp, url_prefix='/blog')
 
     return app
