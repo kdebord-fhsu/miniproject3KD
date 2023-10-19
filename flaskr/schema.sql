@@ -2,7 +2,6 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS role;
 
 -- Create the user table for authentication
 CREATE TABLE user (
