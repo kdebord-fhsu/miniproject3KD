@@ -1,6 +1,8 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Student Portal</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 <nav>
   <h1>Student Portal</h1>
   {% if g.user %}
