@@ -17,4 +17,4 @@ Within a terminal window, please type the following:
 ```
 python main.py
 ```
-# miniproject2KD
+# miniproject3KD
